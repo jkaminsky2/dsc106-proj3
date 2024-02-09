@@ -29,15 +29,6 @@ function _chart(d3, topojson, us) {
   states.append("title")
       .text(d => d.properties.name);
 
-  const counties = g.append("g")
-      .attr("fill", "none")
-      .attr("stroke", "#fff")
-      .attr("stroke-linejoin", "round")
-    .selectAll("path")
-    .data(topojson.feature(us, us.objects.counties).features)
-    .join("path")
-      .attr("d", path);
-
   svg.call(zoom);
 
   function reset() {
@@ -47,9 +38,28 @@ function _chart(d3, topojson, us) {
       d3.zoomIdentity,
       d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
     );
+    // Remove the county borders when resetting the map
+    counties.remove();
   }
 
+  let counties; // Define counties variable outside the clicked function
+
   function clicked(event, d) {
+    const countyFeatures = topojson.feature(us, us.objects.counties).features;
+
+    // Filter county features based on the clicked state
+    const filteredCounties = countyFeatures.filter(county => county.properties.state === d.properties.name);
+
+    // Render county borders for the clicked state
+    counties = g.append("g")
+      .attr("fill", "none")
+      .attr("stroke", "#fff")
+      .attr("stroke-linejoin", "round")
+    .selectAll("path")
+    .data(filteredCounties)
+    .join("path")
+      .attr("d", path);
+
     const [[x0, y0], [x1, y1]] = path.bounds(d);
     event.stopPropagation();
     states.transition().style("fill", null);
