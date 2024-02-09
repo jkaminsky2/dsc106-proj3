@@ -6,13 +6,15 @@ md`<div style="color: grey; font: 13px/25.5px var(--sans-serif); text-transform:
 Pan and zoom, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
 )}
 
-d3.csv("countypres_2000-2020")
+
+function _chart(d3,topojson,us)
+{
+
+  d3.csv("countypres_2000-2020")
   .get(function(data) {
       console.log(data)
   });
 
-function _chart(d3,topojson,us)
-{
   const width = 975;
   const height = 610;
 
