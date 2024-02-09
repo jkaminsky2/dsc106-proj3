@@ -10,11 +10,6 @@ Pan and zoom, or click to zoom into a particular state using [*zoom*.transform](
 function _chart(d3,topojson,us)
 {
 
-  d3.csv("countypres_2000-2020")
-  .get(function(data) {
-      console.log(data)
-  });
-
   const width = 975;
   const height = 610;
 
