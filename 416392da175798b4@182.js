@@ -1,3 +1,11 @@
+function _1(md){return(
+md`<div style="color: grey; font: 13px/25.5px var(--sans-serif); text-transform: uppercase;"><h1 style="display: none;">Zooming to bounding box</h1><a href="https://d3js.org/">D3</a> › <a href="/@d3/gallery">Gallery</a></div>
+
+# Zoom to bounding box
+
+Pan and zoom, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
+)}
+
 function _chart(d3, topojson, us) {
   const width = 975;
   const height = 610;
