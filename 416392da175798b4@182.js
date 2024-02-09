@@ -8,6 +8,7 @@ md`<div style="color: grey; font: 13px/25.5px var(--sans-serif); text-transform:
 Pan and zoom, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
 )}
 
+
 d3.csv("countypres_2000-2020"); {
   for (var i = 0; i < 6; i++) {
     console.log(data[i].year);
@@ -24,7 +25,7 @@ d3.csv("countypres_2000-2020"); {
     console.log(data[i].mode);
   }
 }
-
+async function _chart(d3,topojson,us,countyData) {
 function _chart(d3,topojson,us)
 {
 
@@ -97,6 +98,32 @@ function _chart(d3,topojson,us)
   }
 
   return svg.node();
+
+
+}
+}
+
+export default function define(runtime, observer){
+  const main = runtime.module();
+
+  const fileAttachments = newMap([
+    ["states-albers-10m.json", {url: newURL("./files/75faaaca1f1a4f415145b9db520349a3a0b93a53c1071346a30e6824586a7c251f45367d9262ed148b7a2b5c2694aa7703f3ac88051abc65066fd0074fdf9c9e.json", import.meta.url), mimeType:"application/json", toString}]
+  ]);
+
+  main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
+
+  main.variable(observer()).define(["md"], _1);
+
+  main.variable(observer("chart")).define("chart", ["d3", "topojson", "us", "FileAttachment"], async function(d3, topojson, us, FileAttachment){
+
+    const countyData = await d3.csv("countypres_2000-2020.csv");
+
+    return _chart(d3, topojson, us, countyData);
+  });
+
+  main.variable(observer("us")).define("us", ["FileAttachment"], _us);
+
+  return main;
 }
 
 
