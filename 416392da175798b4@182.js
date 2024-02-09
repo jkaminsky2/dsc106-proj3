@@ -1,3 +1,5 @@
+import { csv } from 'd3';
+
 function _1(md){return(
 md`<div style="color: grey; font: 13px/25.5px var(--sans-serif); text-transform: uppercase;"><h1 style="display: none;">Zoom to bounding box</h1><a href="https://d3js.org/">D3</a> › <a href="/@d3/gallery">Gallery</a></div>
 
@@ -6,6 +8,22 @@ md`<div style="color: grey; font: 13px/25.5px var(--sans-serif); text-transform:
 Pan and zoom, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
 )}
 
+d3.csv("countypres_2000-2020"); {
+  for (var i = 0; i < 6; i++) {
+    console.log(data[i].year);
+    console.log(data[i].state);
+    console.log(data[i].state_po);
+    console.log(data[i].county_name);
+    console.log(data[i].county_fips);
+    console.log(data[i].office);
+    console.log(data[i].candidate);
+    console.log(data[i].party);
+    console.log(data[i].candidatevotes);
+    console.log(data[i].totalvotes);
+    console.log(data[i].version);
+    console.log(data[i].mode);
+  }
+}
 
 function _chart(d3,topojson,us)
 {
