@@ -63,7 +63,7 @@ function _1(md){return(
       const [[x0, y0], [x1, y1]] = path.bounds(d);
       event.stopPropagation();
       states.transition().style("fill", null);
-      d3.select(this).transition().style("fill", "red");
+      //d3.select(this).transition().style("fill", "red");
       svg.transition().duration(750).call(
         zoom.transform,
         d3.zoomIdentity
