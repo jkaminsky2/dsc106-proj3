@@ -28,7 +28,7 @@ function _1(md){return(
   
     const colorScale = d3.scaleOrdinal()
     .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
-    .range(["red", "blue", "green", "yellow", "orange"]); // Add more colors as needed
+    .range(["red", "blue"]);
 
     const states = g.append("g")
         .attr("cursor", "pointer")
