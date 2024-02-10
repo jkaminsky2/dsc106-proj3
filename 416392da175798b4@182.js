@@ -68,7 +68,7 @@ function _1(md){return(
         .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
         .range(d => {
             const stateValue = stateValues.get(d.properties.name);
-            return stateValue === -1 ? "red" : "blue";
+            return stateValue === "-1" ? "red" : "blue";
         });
 
     const states = g.append("g")
