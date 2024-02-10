@@ -3,26 +3,30 @@ function _1(md){return(
   
   # Zoom to bounding box
   
-  Pans and zoom, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
+  Pan and zoom, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
   )}
-  function addControls(d3, svg, zoom) {
+ function addControls(d3, svg, zoom) {
     const years = Array.from({ length: 21 }, (_, i) => 2000 + i); // Create an array of years from 2000 to 2020
 
     // Create a dropdown menu for selecting the year
-    const selectYear = d3.select("body")
+    const selectYear = d3.select(svg.node().parentNode) // Append to SVG container
         .append("select")
         .attr("id", "year-select")
+        .style("position", "absolute") // Positioning for dropdown
+        .style("top", "10px") // Adjust as needed
+        .style("left", "10px") // Adjust as needed
         .selectAll("option")
         .data(years)
         .enter()
         .append("option")
         .text(d => d)
         .attr("value", d => d);
-
-    // Create a button for moving to the top left corner of the map
-    const topLeftButton = d3.select("body")
+   const topLeftButton = d3.select(svg.node().parentNode) // Append to SVG container
         .append("button")
         .text("Go to Top Left")
+        .style("position", "absolute") // Positioning for button
+        .style("top", "30px") // Adjust as needed
+        .style("left", "10px") // Adjust as needed
         .on("click", () => {
             svg.transition().duration(750).call(
                 zoom.transform,
@@ -30,6 +34,7 @@ function _1(md){return(
             );
         });
 }
+
   function _chart(d3,topojson,us)
   {
     const width = 975;
