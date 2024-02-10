@@ -58,25 +58,16 @@ function _1(md){return(
   
     const g = svg.append("g");
   
-    //const colorScale = d3.scaleOrdinal()
-    //.domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
-    //.range(["red", "blue"]);
+    const colorScale = d3.scaleOrdinal()
+    .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
+    .range(["red", "blue"]);
   
-    const data = await FileAttachment("inter_visual_data-2.csv").csv(); // Load CSV data
-    const stateValues = new Map(data.map(d => [d.state, +d.result])); // Create a map of state values
-    const colorScale = d3.scaleSequential()
-      .domain(d3.extent(data, d => +d.result)) // Use extent of values as domain
-      .interpolator(d3.interpolateReds);
-
-    //const data = await FileAttachment("inter_visual_data-2.csv").csv();
-    //const stateValues = new Map(data.map(d => [d.state, +d.result]));
-    //const colorScale = d3.scaleOrdinal()
-    //    .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
-     //   .range(d => {
-     //       const stateValue = const stateValue = stateValues.get(d.properties.result);
-     //       return stateValue === -1 ? "red" : "blue";
-    //    });
-
+    //const data = await FileAttachment("inter_visual_data-2.csv").csv(); // Load CSV data
+    //const stateValues = new Map(data.map(d => [d.state, +d.result])); // Create a map of state values
+    //const colorScale = d3.scaleSequential()
+    //  .domain(d3.extent(data, d => +d.result)) // Use extent of values as domain
+    //  .interpolator(d3.interpolateReds);
+    
     const states = g.append("g")
         .attr("cursor", "pointer")
       .selectAll("path")
@@ -84,8 +75,7 @@ function _1(md){return(
       .join("path")
         .on("click", clicked)
         .attr("d", path)
-        .attr("fill", d => colorScale(stateValues.get(d.properties.name) || 0));
-        //.attr("fill", d => colorScale(d.properties.name));
+        .attr("fill", d => colorScale(d.properties.name));
     
     states.append("title")
         .text(d => d.properties.name);
