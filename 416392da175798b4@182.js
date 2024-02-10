@@ -84,7 +84,8 @@ function _1(md){return(
       .join("path")
         .on("click", clicked)
         .attr("d", path)
-        .attr("fill", d => colorScale(d.properties.name));
+        .attr("fill", d => colorScale(stateValues.get(d.properties.name)));
+        //.attr("fill", d => colorScale(d.properties.name));
     
     states.append("title")
         .text(d => d.properties.name);
