@@ -5,7 +5,31 @@ function _1(md){return(
   
   Pan and zoom, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
   )}
-  
+  function addControls(d3, svg, zoom) {
+    const years = Array.from({ length: 21 }, (_, i) => 2000 + i); // Create an array of years from 2000 to 2020
+
+    // Create a dropdown menu for selecting the year
+    const selectYear = d3.select("body")
+        .append("select")
+        .attr("id", "year-select")
+        .selectAll("option")
+        .data(years)
+        .enter()
+        .append("option")
+        .text(d => d)
+        .attr("value", d => d);
+
+    // Create a button for moving to the top left corner of the map
+    const topLeftButton = d3.select("body")
+        .append("button")
+        .text("Go to Top Left")
+        .on("click", () => {
+            svg.transition().duration(750).call(
+                zoom.transform,
+                d3.zoomIdentity.translate(0, 0).scale(1)
+            );
+        });
+}
   function _chart(d3,topojson,us)
   {
     const width = 975;
