@@ -3,7 +3,7 @@ function _1(md){return(
   
   # Zoom to bounding box
   
-  Pans and zooms, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
+  Pan and zoom, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
   )}
  function addControls(d3, svg, zoom) {
     const years = Array.from({ length: 21 }, (_, i) => 2000 + i); // Create an array of years from 2000 to 2020
