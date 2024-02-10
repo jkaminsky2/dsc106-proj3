@@ -26,14 +26,18 @@ function _1(md){return(
   
     const g = svg.append("g");
   
+    const colorScale = d3.scaleOrdinal()
+    .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
+    .range(["red", "blue", "green", "yellow", "orange"]); // Add more colors as needed
+
     const states = g.append("g")
-        .attr("fill", "#444")
         .attr("cursor", "pointer")
       .selectAll("path")
       .data(topojson.feature(us, us.objects.states).features)
       .join("path")
         .on("click", clicked)
-        .attr("d", path);
+        .attr("d", path)
+        .attr("fill", d => colorScale(d.properties.name));
     
     states.append("title")
         .text(d => d.properties.name);
