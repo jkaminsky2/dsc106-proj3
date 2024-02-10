@@ -58,9 +58,15 @@ function _1(md){return(
   
     const g = svg.append("g");
   
-    const colorScale = d3.scaleOrdinal()
-    .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
-    .range(["red", "blue"]);
+    //const colorScale = d3.scaleOrdinal()
+    //.domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
+    //.range(["red", "blue"]);
+  
+    const data = await FileAttachment("inter_visual_data-2.csv").csv(); // Load CSV data
+    const stateValues = new Map(data.map(d => [d.state, +d.value])); // Create a map of state values
+    const colorScale = d3.scaleSequential()
+      .domain(d3.extent(data, d => +d.value)) // Use extent of values as domain
+      .interpolator(d3.interpolateReds);
 
     //const data = await FileAttachment("inter_visual_data-2.csv").csv();
     //const stateValues = new Map(data.map(d => [d.state, +d.result]));
