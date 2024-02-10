@@ -63,9 +63,9 @@ function _1(md){return(
     //.range(["red", "blue"]);
   
     const data = await FileAttachment("inter_visual_data-2.csv").csv(); // Load CSV data
-    const stateValues = new Map(data.map(d => [d.state, +d.value])); // Create a map of state values
+    const stateValues = new Map(data.map(d => [d.state, +d.result])); // Create a map of state values
     const colorScale = d3.scaleSequential()
-      .domain(d3.extent(data, d => +d.value)) // Use extent of values as domain
+      .domain(d3.extent(data, d => +d.result)) // Use extent of values as domain
       .interpolator(d3.interpolateReds);
 
     //const data = await FileAttachment("inter_visual_data-2.csv").csv();
