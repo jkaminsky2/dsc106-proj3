@@ -58,18 +58,18 @@ function _1(md){return(
   
     const g = svg.append("g");
   
-    //const colorScale = d3.scaleOrdinal()
-    //.domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
-    //.range(["red", "blue"]);
-
-    const data = await FileAttachment("inter_visual_data-2.csv").csv();
-    const stateValues = new Map(data.map(d => [d.state, +d.result]));
     const colorScale = d3.scaleOrdinal()
-        .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
-        .range(d => {
-            const stateValue = const stateValue = stateValues.get(d.properties.result);
-            return stateValue === -1 ? "red" : "blue";
-        });
+    .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
+    .range(["red", "blue"]);
+
+    //const data = await FileAttachment("inter_visual_data-2.csv").csv();
+    //const stateValues = new Map(data.map(d => [d.state, +d.result]));
+    //const colorScale = d3.scaleOrdinal()
+    //    .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
+     //   .range(d => {
+     //       const stateValue = const stateValue = stateValues.get(d.properties.result);
+     //       return stateValue === -1 ? "red" : "blue";
+    //    });
 
     const states = g.append("g")
         .attr("cursor", "pointer")
