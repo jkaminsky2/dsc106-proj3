@@ -67,7 +67,7 @@ function _1(md){return(
     const colorScale = d3.scaleOrdinal()
         .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
         .range(d => {
-            const stateValue = stateValues.get(d.properties.name);
+            const stateValue = const stateValue = stateValues.get(d.properties.val);
             return stateValue === "-1" ? "red" : "blue";
         });
 
