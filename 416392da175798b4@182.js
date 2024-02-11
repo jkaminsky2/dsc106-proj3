@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 d3.csv("countypres_2000-2020").then(function(data) {
-  console.log(data);
+  console.log(data[0]);
 })
 
 function _1(md){return(
