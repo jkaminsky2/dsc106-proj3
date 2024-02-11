@@ -1,9 +1,3 @@
-import d3 from "/Users/jrhop/dsc106/project3/dsc106-proj3/node_modules/d3";
-
-d3.csv("countypres_2000-2020").then(function(data) {
-  console.log(data[0]);
-})
-
 function _1(md){return(
   md`<div style="color: grey; font: 13px/25.5px var(--sans-serif); text-transform: uppercase;"><h1 style="display: none;">Zoom to bounding boxes</h1><a href="https://d3js.org/">D3</a> › <a href="/@d3/gallery">Gallery</a></div>
   
