@@ -9,7 +9,7 @@ function _1(md){return(
   
   # Zoom to bounding box
   
-  Pans and zooms, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
+  Pan and zoom, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
   )}
  function addControls(d3, svg, zoom) {
     const years = Array.from({ length: 21 }, (_, i) => 2000 + i); // Create an array of years from 2000 to 2020
@@ -67,16 +67,13 @@ function _1(md){return(
     const colorScale = d3.scaleOrdinal()
     .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
     .range(["red", "blue"]);
-
-    //const data = await FileAttachment("inter_visual_data-2.csv").csv();
-    //const stateValues = new Map(data.map(d => [d.state, +d.result]));
-    //const colorScale = d3.scaleOrdinal()
-    //    .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
-     //   .range(d => {
-     //       const stateValue = const stateValue = stateValues.get(d.properties.result);
-     //       return stateValue === -1 ? "red" : "blue";
-    //    });
-
+  
+    //const data = await FileAttachment("inter_visual_data-2.csv").csv(); // Load CSV data
+    //const stateValues = new Map(data.map(d => [d.state, +d.result])); // Create a map of state values
+    //const colorScale = d3.scaleSequential()
+    //  .domain(d3.extent(data, d => +d.result)) // Use extent of values as domain
+    //  .interpolator(d3.interpolateReds);
+    
     const states = g.append("g")
         .attr("cursor", "pointer")
       .selectAll("path")
@@ -106,7 +103,30 @@ function _1(md){return(
       );
     }
   
-    function clicked(event, d) {
+   // function clicked(event, d) {
+     // const [[x0, y0], [x1, y1]] = path.bounds(d);
+     // event.stopPropagation();
+     // states.transition().style("fill", null);
+      //d3.select(this).transition().style("fill", "red");
+     // svg.transition().duration(750).call(
+      //  zoom.transform,
+      //  d3.zoomIdentity
+      //    .translate(width / 2, height / 2)
+     //     .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+     //     .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+     //   d3.pointer(event, svg.node())
+    //  );
+    //}
+
+  function clicked(event, d) {
+    const statePath = d3.select(this);
+    const isZoomed = statePath.attr("data-zoomed");
+  
+    if (isZoomed) {
+      // If already zoomed, zoom out to normal
+      reset();
+      statePath.attr("data-zoomed", null); // Remove zoomed attribute
+    } else {
       const [[x0, y0], [x1, y1]] = path.bounds(d);
       event.stopPropagation();
       states.transition().style("fill", null);
@@ -119,7 +139,9 @@ function _1(md){return(
           .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
         d3.pointer(event, svg.node())
       );
+      statePath.attr("data-zoomed", true); // Mark as zoomed
     }
+  }
   
     function zoomed(event) {
       const {transform} = event;
