@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import d3 from "/Users/jrhop/dsc106/project3/dsc106-proj3/node_modules/d3";
 
 d3.csv("countypres_2000-2020").then(function(data) {
   console.log(data[0]);
