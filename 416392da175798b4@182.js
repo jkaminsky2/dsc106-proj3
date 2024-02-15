@@ -16,8 +16,9 @@ function _1(md){return(
         .style("top", "10px") // Adjust as needed
         .style("left", "10px") // Adjust as needed
         .on("change", function() {
-          const selectedYear = d3.select(this).property("value");
-          console.log("Selected year:", selectedYear)
+          const selectedYear = +d3.select(this).property("value");
+          const filteredStates = us.objects.states.geometries.filter(d => d.properties.year === selectedYear);
+          updateVisualization(states, filteredStates);
         })
         .selectAll("option")
         .data(years)
@@ -38,6 +39,19 @@ function _1(md){return(
             );
         });
 }
+
+  function updateVisualization(states, filteredStates) {
+    states.data(filteredStates, d => d.properties.name)
+      .join(
+        enter => enter.append("path")
+          .attr("d", path)
+          .attr("fill", d => colorScale(d.properties.name))
+          .append("title")
+          .text(d => d.properties.name),
+        update => update
+          .attr("fill", d => colorScale(d.properties.name))
+      );
+  }
 
   function _chart(d3,topojson,us)
   {
