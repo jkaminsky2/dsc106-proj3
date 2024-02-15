@@ -145,6 +145,10 @@ function _1(md){return(
   
     return svg.node();
   }
+
+  function _us(FileAttachment){return(
+    FileAttachment("states-albers-10m.json").json()
+  )}
   
   
   export default function define(runtime, observer) {
