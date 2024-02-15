@@ -146,18 +146,6 @@ function _1(md){return(
     return svg.node();
   }
   
-  const selectButton = d3.selectButton;
-  d3.select("selectButton")
-    .selectAll("myOptions")
-    .data(allGroup)
-    .enter()
-    .append('option')
-    .text(function(d) {return d;})
-    .attr("value", function(d) {return d;})
-  
-  function _us(FileAttachment){return(
-  FileAttachment("states-albers-10m.json").json()
-  )}
   
   export default function define(runtime, observer) {
     const main = runtime.module();
