@@ -15,6 +15,10 @@ function _1(md){return(
         .style("position", "absolute") // Positioning for dropdown
         .style("top", "10px") // Adjust as needed
         .style("left", "10px") // Adjust as needed
+        .on("change", function() {
+          const selectedYear = d3.select(this).property("value");
+          console.log("Selected year:", selectedYear)
+        })
         .selectAll("option")
         .data(years)
         .enter()
