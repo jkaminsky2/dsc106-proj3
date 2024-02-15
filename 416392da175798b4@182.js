@@ -26,6 +26,28 @@ function _1(md){return(
         .append("option")
         .text(d => d)
         .attr("value", d => d);
+
+    const yearButton = d3.select(svg.node().parentNode)
+        .append("div")
+        .style("position", "absolute")
+        .style("top", "50px")
+        .style("left", 50px);
+
+    yearButton.append("button")
+        .text("Select Year")
+        .on("click", () => {
+          selectYear.node().click();
+        })
+
+    yearButton.append("select")
+      .attr("id", "year-dropdown")
+      .selectAll("option")
+      .data(years)
+      .enter()
+      .append("option")
+      .text(d => d)
+      .attr("value", d => d);
+
    const topLeftButton = d3.select(svg.node().parentNode) // Append to SVG container
         .append("button")
         .text("Go to Top Left")
