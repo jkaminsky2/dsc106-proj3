@@ -31,7 +31,7 @@ function _1(md){return(
         .append("div")
         .style("position", "absolute")
         .style("top", "50px")
-        .style("left", 50px);
+        .style("left", "50px");
 
     yearButton.append("button")
         .text("Select Year")
