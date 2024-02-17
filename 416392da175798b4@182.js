@@ -162,6 +162,27 @@ function _1(md){return(
         .attr("d", path(topojson.mesh(us, us.objects.states, (a, b) => a !== b)));
   
     svg.call(zoom);
+
+    const yearButton = d3.select(svg.node().parentNode)
+      .append("div")
+      .style("position", "absolute")
+      .style("top", "10px")
+      .style("left", "10px");
+
+    yearButton.append("button")
+      .text("Select Year")
+      .on("click", () => {
+          selectYear.node().click(); // Trigger the click event of the selectYear dropdown
+      });
+
+    yearButton.append("select")
+      .attr("id", "year-dropdown")
+      .selectAll("option")
+      .data(Array.from({ length: 21 }, (_, i) => 2000 + i)) // Create an array of years from 2000 to 2020
+      .enter()
+      .append("option")
+      .text(d => d)
+      .attr("value", d => d);
   
     function reset() {
       states.transition().style("fill", null);
