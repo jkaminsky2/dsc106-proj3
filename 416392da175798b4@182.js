@@ -4,8 +4,21 @@ function _1(md){return(
   # U.S. Presidential Election Data: 2000 - 2020
   
   Pan and zoom, or click to zoom into a particular state using [*zoom*.transform](https://d3js.org/d3-zoom#zoom_transform) transitions. Filter by election year using the year button. The bounding box is computed using [*path*.bounds](https://d3js.org/d3-geo/path#path_bounds).`
-  )}
- function addControls(d3, svg, zoom) {
+  
+  )} 
+
+<br><br><br><br><br><br>
+  <select>
+    <option value="2000">2000</option>
+    <option value="2004">2004</option>
+    <option value="2008">2008</option>
+    <option value="2012">2012</option>
+    <option value="2016">2016</option>
+    <option value="2020">2020</option>
+  </select>
+</br></br></br></br></br></br>
+
+  function addControls(d3, svg, zoom) {
     const years = Array.from({ length: 21 }, (_, i) => 2000 + i); // Create an array of years from 2000 to 2020
 
     // Create a dropdown menu for selecting the year
@@ -87,6 +100,11 @@ function _1(md){return(
           .append("option")
         .text(function (d) { return d; })
         .attr("value", function (d) { return d; })
+
+    dropdownButton.on("change", function(d) {
+      var selectedOption = d3.select(this).property("value")
+      updateChart(selectedOption)
+    })
 }
 
   function updateVisualization(states, filteredStates) {
