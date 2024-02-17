@@ -166,8 +166,8 @@ function _1(md){return(
     const yearButton = d3.select(svg.node().parentNode)
       .append("div")
       .style("position", "absolute")
-      .style("top", "10px")
-      .style("left", "10px");
+      .style("top", "100px")
+      .style("left", "100px");
 
     yearButton.append("button")
       .text("Select Year")
