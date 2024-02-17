@@ -11,5 +11,17 @@ import {Runtime, Library, Inspector} from "./runtime.js";
 const runtime = new Runtime();
 const main = runtime.module(define, Inspector.into(document.body));
 
+
+<div class="overlay">
+      <label> {yearButton}</label>
+      <input
+        id="dropdown"
+        type="range"
+        min="2000"
+        max="2020"
+        bind:value={sliderYear}
+      />
+</div>
+
 </script>
 
