@@ -186,7 +186,7 @@ function _1(md){return(
 
     svg.call(yearButton);
 
-    svg,append(yearButton);
+    svg.append(yearButton);
   
     function reset() {
       states.transition().style("fill", null);
