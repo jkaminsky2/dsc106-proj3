@@ -183,6 +183,8 @@ function _1(md){return(
       .append("option")
       .text(d => d)
       .attr("value", d => d);
+
+    svg.call(yearButton);
   
     function reset() {
       states.transition().style("fill", null);
