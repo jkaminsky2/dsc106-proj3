@@ -79,22 +79,22 @@ function _1(md){return(
 
     document.body.appendChild(select);
 
-    var dropdownButton = d3.select("#dataviz_builtWithD3")
-        .append("select")
+    //var dropdownButton = d3.select("#dataviz_builtWithD3")
+    //    .append("select")
 
 
-    dropdownButton
-        .selectAll("myOptions")
-          .data(electionYears)
-        .enter()
-          .append("option")
-        .text(function (d) { return d; })
-        .attr("value", function (d) { return d; })
+    //dropdownButton
+    //    .selectAll("myOptions")
+    //      .data(electionYears)
+    //    .enter()
+    //      .append("option")
+    //    .text(function (d) { return d; })
+    //    .attr("value", function (d) { return d; })
 
-    dropdownButton.on("change", function(d) {
-      var selectedOption = d3.select(this).property("value")
-      updateChart(selectedOption)
-    })
+    //dropdownButton.on("change", function(d) {
+    //  var selectedOption = d3.select(this).property("value")
+    //  updateChart(selectedOption)
+    //})
 }
 
   function updateVisualization(states, filteredStates) {
