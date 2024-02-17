@@ -74,6 +74,19 @@ function _1(md){return(
           <option value="2020">2020</option>
         </select>
       </br></br></br></br></br></br>
+
+    var electionYears = [2000, 2004, 2008, 2012, 2016, 2020]
+
+    var dropdownButton = d3.select("#dataviz_builtWithD3")
+        .append("select")
+
+    dropdownButton
+        .selectAll("myOptions")
+          .data(electionYears)
+        .enter()
+          .append("option")
+        .text(function (d) { return d; })
+        .attr("value", function (d) { return d; })
 }
 
   function updateVisualization(states, filteredStates) {
