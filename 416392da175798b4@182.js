@@ -169,7 +169,7 @@ function _1(md){return(
       .style("top", "100px")
       .style("left", "100px");
 
-    const selectYear = yearButton.append("select")
+    yearButton.append("select")
       .attr("id", "year-dropdown")
       .selectAll("option")
       .data(Array.from({ length: 21}, (_, i) => 2000 + i))
