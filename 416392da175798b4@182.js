@@ -134,8 +134,8 @@ function _1(md){return(
     const g = svg.append("g");
   
     const colorScale = d3.scaleOrdinal()
-    .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
-    .range(["red", "blue"]);
+      .domain(topojson.feature(us, us.objects.states).features.map(d => d.properties.name))
+      .range(["red", "blue"]);
   
     //const data = await FileAttachment("inter_visual_data-2.csv").csv(); // Load CSV data
     //const stateValues = new Map(data.map(d => [d.state, +d.result])); // Create a map of state values
@@ -144,16 +144,16 @@ function _1(md){return(
     //  .interpolator(d3.interpolateReds);
     
     const states = g.append("g")
-        .attr("cursor", "pointer")
+      .attr("cursor", "pointer")
       .selectAll("path")
       .data(topojson.feature(us, us.objects.states).features)
       .join("path")
-        .on("click", clicked)
-        .attr("d", path)
-        .attr("fill", d => colorScale(d.properties.name));
+      .on("click", clicked)
+      .attr("d", path)
+      .attr("fill", d => colorScale(d.properties.name));
     
     states.append("title")
-        .text(d => d.properties.name);
+      .text(d => d.properties.name);
   
     g.append("path")
         .attr("fill", "none")
@@ -169,24 +169,20 @@ function _1(md){return(
       .style("top", "100px")
       .style("left", "100px");
 
-    yearButton.append("button")
-      .text("Select Year")
-      .on("click", () => {
-          selectYear.node().click(); // Trigger the click event of the selectYear dropdown
-      });
-
-    yearButton.append("select")
+    const selectYear = yearButton.append("select")
       .attr("id", "year-dropdown")
       .selectAll("option")
-      .data(Array.from({ length: 21 }, (_, i) => 2000 + i)) // Create an array of years from 2000 to 2020
+      .data(Array.from({ length: 21}, (_, i) => 2000 + i))
       .enter()
       .append("option")
       .text(d => d)
       .attr("value", d => d);
 
-    svg.call(yearButton);
-
-    svg.append(yearButton);
+    yearButton.append("button")
+      .text("Select Year")
+      .on("click", () => {
+          selectYear.node().click(); // Trigger the click event of the selectYear dropdown
+      });
   
     function reset() {
       states.transition().style("fill", null);
