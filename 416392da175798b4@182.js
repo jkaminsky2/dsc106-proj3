@@ -163,6 +163,28 @@ function _1(md){return(
   
     svg.call(zoom);
 
+    let sliderYear=2000;
+    let slider_label="";
+
+    <div class="overlay">
+      <label> {yearButton}</label>
+      <input
+        id="dropdown"
+        type="range"
+        min="2000"
+        max="2020"
+        bind:value={sliderYear}
+      />
+    </div>
+
+    //function filterElections(sliderYear) {
+    //  let value = sliderYearScale(sliderYear);
+    //  let filterYear = value.getYear();
+    //  return data.filter(function (year) {
+
+    //  })
+    //}
+
     const yearButton = d3.select(svg.node().parentNode)
       .append("div")
       .style("position", "absolute")
