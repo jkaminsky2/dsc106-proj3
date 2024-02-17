@@ -27,7 +27,7 @@ function _1(md){return(
         .text(d => d)
         .attr("value", d => d);
 
-      const svgContainer = d3.select(svg.node().parentNode)
+    const svgContainer = d3.select(svg.node().parentNode)
         .style("position", "relative");
 
     const yearButton = d3.select(svg.node().parentNode)
@@ -63,6 +63,17 @@ function _1(md){return(
                 d3.zoomIdentity.translate(0, 0).scale(1)
             );
         });
+
+    <br><br><br><br><br><br>
+        <select>
+          <option value="2000">2000</option>
+          <option value="2004">2004</option>
+          <option value="2008">2008</option>
+          <option value="2012">2012</option>
+          <option value="2016">2016</option>
+          <option value="2020">2020</option>
+        </select>
+      </br></br></br></br></br></br>
 }
 
   function updateVisualization(states, filteredStates) {
