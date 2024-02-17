@@ -7,17 +7,6 @@ function _1(md){return(
   
   )} 
 
-<br><br><br><br><br><br>
-  <select>
-    <option value="2000">2000</option>
-    <option value="2004">2004</option>
-    <option value="2008">2008</option>
-    <option value="2012">2012</option>
-    <option value="2016">2016</option>
-    <option value="2020">2020</option>
-  </select>
-</br></br></br></br></br></br>
-
   function addControls(d3, svg, zoom) {
     const years = Array.from({ length: 21 }, (_, i) => 2000 + i); // Create an array of years from 2000 to 2020
 
@@ -77,21 +66,22 @@ function _1(md){return(
             );
         });
 
-    <br><br><br><br><br><br>
-        <select>
-          <option value="2000">2000</option>
-          <option value="2004">2004</option>
-          <option value="2008">2008</option>
-          <option value="2012">2012</option>
-          <option value="2016">2016</option>
-          <option value="2020">2020</option>
-        </select>
-      </br></br></br></br></br></br>
+    const select = document.createElement('select');
 
-    var electionYears = [2000, 2004, 2008, 2012, 2016, 2020]
+    const electionYears = [2000, 2004, 2008, 2012, 2016, 2020]
+
+    electionYears.forEach(year => {
+      const option = document.createElement('option');
+      option.value = year;
+      option.textContent = year;
+      select.appendChild(option);
+    });
+
+    document.body.appendChild(select);
 
     var dropdownButton = d3.select("#dataviz_builtWithD3")
         .append("select")
+
 
     dropdownButton
         .selectAll("myOptions")
