@@ -22,13 +22,6 @@ function _2(md){
     "\n\n"
     )}
 
-//Double click error
-//Hover error
-//stacked chart above map (already have data)
-//dynamically update datasets when year changed
-//rectangle around map?
-//documentaiton
-
 async function fetchText(url) {
   const response = await fetch(url);
   return await response.text();
