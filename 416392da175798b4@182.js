@@ -374,7 +374,7 @@ barChart.append("text")
     statesPaths.each(function(d) {
         const statePath = d3.select(this);
         setTimeout(() => {
-            const resultRow = ovrdata2.find(row => row['state'] == d.properties.name && row['year'] === year_user);
+            const resultRow = ovrdata2.find(row => row['state'] == d.properties['name'] && row['year'] === year_user);
             if (resultRow) {
                 const result = resultRow['result'];
                 statePath.transition()
@@ -385,7 +385,7 @@ barChart.append("text")
                     .duration(1500)
                     .attr("fill", colorScale(0));
             }
-        }, 10 * d.index);
+        }, 10);
     });
       renderTitleAndBarChart(year_user);
   }
