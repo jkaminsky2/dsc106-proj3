@@ -4,6 +4,12 @@ function _1(md){
   <div style="text-align: center; font-size: 30px; font-weight: bold;">
       U.S. Presidential Election Data: 2000 - 2020
     </div>
+  <div style="text-align: center; font-size: 16px;">
+    <br> The interactive visualization below displays U.S. presidential election data from the 2000 election to the 2020 election. Select which year you want to see with the button below. 
+  </div>
+  <div style="text-align: center; font-size: 16px;">
+  Additionally, you can click on any state to see a breakdown of presidential votes for that state; click it a second time to zoom out. Highlight over slices of the pie chart to see additional data. <br> <br>
+  </div>
     <div style="text-align: center; margin-top: 10px;">
     <span style="margin-right: 10px;">Select an Election Year:</span>
     <select id="year-select">
@@ -24,8 +30,6 @@ function _2(md){
     )}
 
 //Double click error
-//Hover pie chart error
-//add explanation of what you can do above map
 //documentaiton
 
 async function fetchText(url) {
@@ -201,16 +205,18 @@ async function _chart(d3, topojson, us) {
       .attr("height", "60%")
       .attr("style", "max-width: 100%; height: auto; display: block; margin: auto;margin-right:300px;margin-top:50px")
       .on("click", reset);
+    
+ 
   
   const path = d3.geoPath();
 
   function renderTitleAndBarChart(selectedYear, withTransition = false) {
-    const title_text = `${selectedYear} Election Data`;
+    const title_text = `${selectedYear} U.S. Presidential Election`;
     const titleContainer = d3.select("body")
       .append("div")
       .attr("class", "title-container")
       .style("position", "absolute")
-      .style("top", "90px")
+      .style("top", "170px")
       .style("left", "50%")
       .style("text-align", "center")
       .style("transform", "translateX(-50%)")
@@ -333,23 +339,31 @@ barChart.append("text")
   svg.call(zoom)
   .on("dblclick.zoom", null);
 
+  states.on("click", clicked).on("dblclick", clicked);
+
 
   function reset() {
-      svg.transition().duration(500).style("margin-right", "300px");
-      d3.select(".pie-chart").transition().duration(400).style("opacity", 0).remove();
-      d3.select(".title-container").transition().duration(400).style("opacity", 0).remove();
-      d3.select(".key-container").transition().duration(400).style("opacity", 0).remove();
-
-      svg.transition().delay(500).duration(750).call(
-          zoom.transform,
-          d3.zoomIdentity,
-          d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
-      );
+    svg.transition().duration(500).style("margin-right", "300px");
+    svg.transition().delay(500).duration(750).call(
+      zoom.transform,
+      d3.zoomIdentity,
+      d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+    );
+    if (zoomedState !== null) {
+      d3.selectAll(".pie-chart, .title-container, .key-container")
+          .transition()
+          .duration(400)
+          .style("opacity", 0)
+          .remove();
+          zoomedState = null;
   }
+}
 
   d3.select("#year-select").on("change", updateChart);
   async function updateChart() {
     const year_user = document.getElementById('year-select').value;
+    d3.select(".title-container").transition().duration(400).style("opacity", 0).remove();
+    d3.select(".bar-chart-container").transition().duration(400).style("opacity", 0).remove();
     renderTitleAndBarChart(year_user,true);
     reset();
     const statesPaths = d3.selectAll("path");
@@ -374,7 +388,7 @@ barChart.append("text")
   }
 
   let zoomedState = null;
-function clicked(event, d) {
+  function clicked(event, d) {
     const stateName = d.properties.name;
     const statePath = d3.select(this);
 
@@ -392,6 +406,7 @@ function clicked(event, d) {
             d3.select(this).attr("data-zoomed", null);
         });
         d3.select(".pie-chart").remove();
+        d3.select(".title-container").remove(); 
         d3.select(".key-container").remove();
 
         svg.transition().delay(450).duration(700).call(
@@ -406,28 +421,23 @@ function clicked(event, d) {
 
         zoomedState = stateName;
 
-        displayPieChart(stateName, selectedYear);
+        displayPieChart(d3, stateName, selectedYear);
 
         d3.select(".title-container").transition().duration(10000).style("opacity", 1);
         d3.select(".bar-chart-container").transition().duration(10000).style("opacity", 1);
     }
 }
 
+
+
   function zoomed(event) {
-    if (event.type !== "dblclick") {
       const { transform } = event;
       g.attr("transform", transform);
       g.attr("stroke-width", 1 / transform.k);
-    }
   }
 
 
-  function displayPieChart(stateName, selectedYear) {
-    //if (d3.event.type === "dblclick") {
-    //  maybe need to pass parameter event into every call
-      //return;
-
-    //}
+  function displayPieChart(d3, stateName, selectedYear) {
     const year_use = document.getElementById('year-select').value;
     console.log(year_use);
     let curr_data = statedata2.find(row => row['state'] === stateName && row['year'] === year_use)['totvotes'];
@@ -451,7 +461,7 @@ function clicked(event, d) {
         .attr("width", pieWidth)
         .attr("height", pieHeight)
         .style("position", "absolute")
-        .style("top", `${height / 2 + 35}px`)
+        .style("top", `${height / 2 + 100}px`)
         .style("right", "10px")
         .style("left", "1062px")
         .style("display", "none");
@@ -470,37 +480,49 @@ function clicked(event, d) {
             .style("background-color", "rgba(255, 255, 255, 0.8)")
             .style("padding", "5px");
 
-        const slices = pieGroup.selectAll("path")
-            .data(d3.pie()(curr_data))
-            .enter().append("path")
-            .attr("d", arc)
-            .attr("fill", (d, i) => colors[i])
-            .attr("stroke", "black")
-            .attr("stroke-width", 1)
-            .on("mouseover", function(d, i) {
-                const percentage = (i.value / totalVotes) * 100;
-                tooltip.html(`<strong>${percentage.toFixed(2)}%</strong> (${i.value} votes)`);
-                tooltip.style("top", `${d3.event.pageY}px`)
-                    .style("left", `${d3.event.pageX}px`)
-                    .style("visibility", "visible");
-            })
-            .on("mouseout", function() {
-                tooltip.style("visibility", "hidden");
-            })
-            .transition()
-            .duration(1000)
-            .attrTween("d", function(d) {
-                var i = d3.interpolate(d.startAngle, d.endAngle);
-                return function(t) {
-                    d.endAngle = i(t);
-                    return arc(d);
-                };
-            });
+            const slices = pieGroup.selectAll("path")
+    .data(d3.pie()(curr_data))
+    .enter().append("path")
+    .attr("d", arc)
+    .attr("fill", (d, i) => colors[i])
+    .attr("stroke", "black")
+    .attr("stroke-width", 1)
+    .on("mousemove", (event, d, i) => {
+        const mouseX = event.pageX;
+        const mouseY = event.pageY;
+        const percentage = 100 * d.value / totalVotes;
+        const tooltipText = `${percentage.toFixed(2)}%` + `</br>` + `${((d.value / 1000000).toFixed(2))} M votes`;
+        tooltip.html(tooltipText);
+        tooltip.style("top", `${mouseY - 45}px`)
+            .style("left", `${mouseX}px`)
+            .style("visibility", "visible")
+            .style("z-index", "9999");
+        const textBox = d3.select(".tooltip-text-box");
+        textBox.html(tooltipText);
+        const textboxWidth = 100;
+        textBox.style("top", `${mouseY - 45}px`)
+              .style("left", `${mouseX - textboxWidth / 2}px`)
+              .style("z-index", "10000");
+    })
+    .on("mouseout", function() {
+        tooltip.style("visibility", "hidden");
+        d3.select(".tooltip-text-box").remove();
+    })
+    .transition()
+    .duration(1000)
+    .attrTween("d", function(d) {
+        var i = d3.interpolate(d.startAngle, d.endAngle);
+        return function(t) {
+            d.endAngle = i(t);
+            return arc(d);
+        };
+    });
+     
         const titleContainer = d3.select(svg.node().parentNode)
             .append("div")
             .attr("class", "title-container")
             .style("position", "absolute")
-            .style("top", `${height / 2 - 27}px`)
+            .style("top", `${height / 2 + 45}px`)
             .style("left", `${width + 87}px`)
             .style("width", `${pieWidth}px`)
             .style("text-align", "center");
@@ -515,8 +537,8 @@ function clicked(event, d) {
             .append("div")
             .attr("class", "key-container")
             .style("position", "absolute")
-            .style("top", `${height / 2 + 210}px`)
-            .style("left", `${width + 300}px`)
+            .style("top", `${height / 2 + 280}px`)
+            .style("left", `${width + 290}px`)
             .style("width", `${pieWidth}px`)
             .style("text-align", "left")
             .style("font-size", "12px")
