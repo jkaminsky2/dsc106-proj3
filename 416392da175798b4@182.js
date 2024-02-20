@@ -1,9 +1,10 @@
-function _1(md){return(
+function _1(md){
+  return(
   md`
   <div style="text-align: center; font-size: 30px; font-weight: bold;">
       U.S. Presidential Election Data: 2000 - 2020
     </div>
-    <div style="text-align: center; margin-top: 20px;">
+    <div style="text-align: center; margin-top: 10px;">
     <span style="margin-right: 10px;">Select an Election Year:</span>
     <select id="year-select">
       <option value="2000">2000</option>
@@ -22,12 +23,17 @@ function _2(md){
     "\n\n"
     )}
 
+//Double click error
+//Hover pie chart error
+//add explanation of what you can do above map
+//documentaiton
+
 async function fetchText(url) {
   const response = await fetch(url);
   return await response.text();
 }
 
-async function getdata(d3, selectedYear) {
+async function getdata(d3) {
   let ovrdata2 = []; 
 
   const csvURL = 'static/state_pres_data.csv';
@@ -38,10 +44,10 @@ async function getdata(d3, selectedYear) {
     const stateData = await processData(stateResponse);
     const ovrResponse = await fetchText(csvURL2);
     const ovrData = await processData(ovrResponse);
-    ovrdata2 = stateData.map(state => ({
+    ovrdata2 = ovrData.map(state => ({
       state: state.state,
       year: state.year,
-      result: ovrData.find(row => row.state === state.state && row['year'] === selectedYear)?.result || 0
+      result: state.result
     }));
   } catch (error) {
     console.error('Failed to fetch or process CSV data:', error);
@@ -171,13 +177,16 @@ function addControls(d3, svg, zoom) {
       .style("border-radius", "5px")
       .style("display", "none");
 }
+
 async function _chart(d3, topojson, us) {
-  let selectedYear = document.getElementById('year-select').value;
-  
+  let selectedYear = "2000";
+  selectedYear = document.getElementById('year-select').value;
   console.log(selectedYear);
-  const statedata2 = await getdata2(d3);
-  const electoralVotesDataset = await getdata3(d3);
-  const ovrdata2 = await getdata(d3, selectedYear);
+  let statedata2 = await getdata2(d3);
+  let electoralVotesDataset = await getdata3(d3);
+  let ovrdata2 = await getdata(d3);
+
+  console.log(ovrdata2);
 
   const width = 975;
   const height = 610;
@@ -185,52 +194,132 @@ async function _chart(d3, topojson, us) {
   const zoom = d3.zoom()
       .scaleExtent([1, 8])
       .on("zoom", zoomed);
-  
- 
 
   const svg = d3.create("svg")
-      .attr("viewBox", [0, 0, width, height + 10])
+      .attr("viewBox", [0, 0, width, height + 100])
       .attr("width", "60%")
       .attr("height", "60%")
-      .attr("style", "max-width: 100%; height: auto; display: block; margin: auto;margin-right:300px")
+      .attr("style", "max-width: 100%; height: auto; display: block; margin: auto;margin-right:300px;margin-top:50px")
       .on("click", reset);
-
-    //svg.append("rect")
-      //.attr("width", width)
-      //.attr("height", height)
-      //.style("fill", "none")
-      //.style("stroke", "black")
-      //.style("stroke", "2px")
-      //.style("stroke-height", "2px")
-  d3.select("#year-select").on("change", function() {
-      _chart(d3, topojson, us);
-  });
-
+  
   const path = d3.geoPath();
 
+  function renderTitleAndBarChart(selectedYear, withTransition = false) {
+    const title_text = `${selectedYear} Election Data`;
+    const titleContainer = d3.select("body")
+      .append("div")
+      .attr("class", "title-container")
+      .style("position", "absolute")
+      .style("top", "90px")
+      .style("left", "50%")
+      .style("text-align", "center")
+      .style("transform", "translateX(-50%)")
+      .style("font-size", "24px")
+      .style("font-weight", "bold")
+      .style("z-index", "100")
+      .text(title_text);
+
+      const curr_year_calc = document.getElementById('year-select').value;
+const user_row1 = parseInt(2 * (parseInt(curr_year_calc) % 2000) / 4) + 1;
+const value1 = electoralVotesDataset[user_row1 + 1]['elecVotes'];
+const value2 = electoralVotesDataset[user_row1]['elecVotes'];
+const total = value1 + value2;
+const proportion1 = value1 / total;
+const proportion2 = value2 / total;
+const name1 = electoralVotesDataset[user_row1 + 1]['candidate'];
+const name2 = electoralVotesDataset[user_row1]['candidate'];
+
+const barWidth1 = proportion1 * 400; 
+const barWidth2 = proportion2 * 400;
+
+const barChartContainer = titleContainer.append("div")
+    .style("display", "flex")
+    .style("justify-content", "center")
+    .style("margin-top", "15px");
+
+
+const barChart = barChartContainer.append("svg")
+  .attr("width", barWidth1 + barWidth2) 
+  .attr("height", 50);
+
+barChart.append("rect")
+  .attr("x", 0)
+  .attr("y", 15)
+  .attr("width", barWidth1)
+  .attr("height", 25)
+  .style("fill", "red");
+
+barChart.append("rect")
+  .attr("x", barWidth1)
+  .attr("y", 15)
+  .attr("width", barWidth2)
+  .attr("height", 25)
+  .style("fill", "blue");
+
+barChart.append("text")
+  .attr("x", 0)
+  .attr("y", 10)
+  .attr("text-anchor", "start")
+  .text(name1)
+  .style("fill", "black")
+  .style("font-size", "12px");
+
+barChart.append("text")
+  .attr("x", barWidth1 + barWidth2)
+  .attr("y", 10)
+  .attr("text-anchor", "end")
+  .text(name2)
+  .style("fill", "black")
+  .style("font-size", "12px");
+
+barChart.append("line")
+  .attr("x1", (barWidth1+ barWidth2) / 2)
+  .attr("y1", 15)
+  .attr("x2", (barWidth1+ barWidth2) / 2)
+  .attr("y2", 40)
+  .attr("stroke-width", "2px")
+  .style("stroke", "black");
+  
+barChart.append("text")
+  .attr("x", (barWidth1+ barWidth2) / 2)
+  .attr("y", 10)
+  .attr("text-anchor", "middle")
+  .text("Goal (270)")
+  .style("fill", "black")
+  .style("font-size", "12px");
+  if (withTransition) {
+    titleContainer
+      .style("opacity", 0)
+      .transition()
+      .duration(2000)
+      .style("opacity", 1);
+  }
+  };
   const g = svg.append("g");
+    
+  renderTitleAndBarChart(document.getElementById('year-select').value);
 
   const colorScale = d3.scaleOrdinal()
       .domain([-1, 1])
       .range(["red", "blue"]);
 
-  const states = g.append("g")
+  let states = g.append("g")
       .attr("cursor", "pointer")
       .selectAll("path")
       .data(topojson.feature(us, us.objects.states).features)
       .join("path")
       .attr("d", path)
       .attr("fill", d => {
-        const resultRow = ovrdata2.find(row => row['state'] == d.properties.name && row['year'] === selectedYear);
-        if (resultRow) {
-            const result = resultRow['result'];
-            return colorScale(result !== undefined ? result : 0);
-        } else {
-            return colorScale(0);
-        }
+          const resultRow = ovrdata2.find(row => row['state'] == d.properties.name && row['year'] === selectedYear);
+          if (resultRow) {
+              const result = resultRow['result'];
+              return colorScale(result);
+          } else {
+              return colorScale(0);
+          }
       })
-    .on("click", clicked);
-      
+      .on("click", clicked);
+
 
   states.append("title")
       .text(d => d.properties.name);
@@ -241,40 +330,68 @@ async function _chart(d3, topojson, us) {
       .attr("stroke-linejoin", "round")
       .attr("d", path(topojson.mesh(us, us.objects.states, (a, b) => a !== b)));
 
-  svg.call(zoom);
+  svg.call(zoom)
+  .on("dblclick.zoom", null);
 
-  
+
   function reset() {
-    svg.transition().duration(500).style("margin-right", "300px");
-    d3.select(".pie-chart").transition().duration(400).style("opacity", 0).remove();
-    d3.select(".title-container").transition().duration(400).style("opacity", 0).remove();
-    d3.select(".key-container").transition().duration(400).style("opacity", 0).remove();
+      svg.transition().duration(500).style("margin-right", "300px");
+      d3.select(".pie-chart").transition().duration(400).style("opacity", 0).remove();
+      d3.select(".title-container").transition().duration(400).style("opacity", 0).remove();
+      d3.select(".key-container").transition().duration(400).style("opacity", 0).remove();
 
-    svg.transition().delay(500).duration(750).call(
-        zoom.transform,
-        d3.zoomIdentity,
-        d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
-    );
-}
+      svg.transition().delay(500).duration(750).call(
+          zoom.transform,
+          d3.zoomIdentity,
+          d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+      );
+  }
 
+  d3.select("#year-select").on("change", updateChart);
+  async function updateChart() {
+    const year_user = document.getElementById('year-select').value;
+    renderTitleAndBarChart(year_user,true);
+    reset();
+    const statesPaths = d3.selectAll("path");
 
-  function clicked(event, d) {
+    statesPaths.each(function(d) {
+        const statePath = d3.select(this);
+        setTimeout(() => {
+            const resultRow = ovrdata2.find(row => row['state'] == d.properties.name && row['year'] === year_user);
+            if (resultRow) {
+                const result = resultRow['result'];
+                statePath.transition()
+                    .duration(1500) 
+                    .attr("fill", colorScale(result));
+            } else {
+                statePath.transition()
+                    .duration(1500)
+                    .attr("fill", colorScale(0));
+            }
+        }, 10 * d.index);
+    });
+      renderTitleAndBarChart(year_user);
+  }
+
+  let zoomedState = null;
+function clicked(event, d) {
     const stateName = d.properties.name;
     const statePath = d3.select(this);
-    const isZoomed = statePath.attr("data-zoomed");
 
-    if (isZoomed) {
-       reset();
+    if (zoomedState === stateName) {
+        reset();
+        renderTitleAndBarChart(document.getElementById('year-select').value, true);
+        zoomedState = null;
     } else {
         const [[x0, y0], [x1, y1]] = path.bounds(d);
         event.stopPropagation();
         states.transition().style("fill", null);
-        svg.transition().duration(450).style("margin-right", "500px"); 
+        svg.transition().duration(450).style("margin-right", "500px");
 
         d3.selectAll("path[data-zoomed='true']").each(function() {
             d3.select(this).attr("data-zoomed", null);
         });
-        d3.select(".pie-chart").remove(); 
+        d3.select(".pie-chart").remove();
         d3.select(".key-container").remove();
 
         svg.transition().delay(450).duration(700).call(
@@ -287,22 +404,36 @@ async function _chart(d3, topojson, us) {
         );
         statePath.attr("data-zoomed", true);
 
-        displayPieChart(stateName);
+        zoomedState = stateName;
+
+        displayPieChart(stateName, selectedYear);
+
+        d3.select(".title-container").transition().duration(10000).style("opacity", 1);
+        d3.select(".bar-chart-container").transition().duration(10000).style("opacity", 1);
     }
 }
 
   function zoomed(event) {
+    if (event.type !== "dblclick") {
       const { transform } = event;
       g.attr("transform", transform);
       g.attr("stroke-width", 1 / transform.k);
+    }
   }
 
-  function displayPieChart(stateName) {
 
-    const data = statedata2.find(row => row['state'] === stateName && row['year'] === selectedYear)['totvotes'];
+  function displayPieChart(stateName, selectedYear) {
+    //if (d3.event.type === "dblclick") {
+    //  maybe need to pass parameter event into every call
+      //return;
+
+    //}
+    const year_use = document.getElementById('year-select').value;
+    console.log(year_use);
+    let curr_data = statedata2.find(row => row['state'] === stateName && row['year'] === year_use)['totvotes'];
     let totalVotes = 0;
-    data.forEach(candidate => {
-      totalVotes += candidate.votes;
+    curr_data.forEach(candidate => {
+        totalVotes += candidate;
     });
     const pieWidth = 200;
     const pieHeight = 200;
@@ -320,7 +451,7 @@ async function _chart(d3, topojson, us) {
         .attr("width", pieWidth)
         .attr("height", pieHeight)
         .style("position", "absolute")
-        .style("top", `${height / 2 - 25}px`)
+        .style("top", `${height / 2 + 35}px`)
         .style("right", "10px")
         .style("left", "1062px")
         .style("display", "none");
@@ -330,116 +461,114 @@ async function _chart(d3, topojson, us) {
         const pieGroup = pieSvg.append("g")
             .attr("transform", `translate(${pieWidth / 2},${pieHeight / 2})`);
         const colors = ["blue", "red", "green", "gold", "gray"];
+        const tooltip = d3.select("body")
+            .append("div")
+            .attr("id", "tooltip")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden")
+            .style("background-color", "rgba(255, 255, 255, 0.8)")
+            .style("padding", "5px");
+
         const slices = pieGroup.selectAll("path")
-    .data(d3.pie()(data))
-    .enter().append("path")
-    .attr("d", arc)
-    .attr("fill", (d, i) => colors[i])
-    .attr("stroke", "black")
-    .attr("stroke-width", 1)
-    .on("mouseover", function(d, i) {
-      console.log(i);
-      const curr_votes = statedata2.find(row => row['state'] === stateName && row['year'] === selectedYear)['totvotes'][i] / 1000000;
-      const cur_percentage = statedata2.find(row => row['state'] === stateName && row['year'] === selectedYear)['pervotes'][i];
-      
-      const tooltipText = `${curr_votes.toFixed(2)}M votes\n${cur_percentage}%`;
-
-        
-        d3.select("#tooltip")
-            .html(tooltipText)
-            .style("visibility", "visible");
-    })
-    //.on("mousemove", function() {
-    //    d3.select("#tooltip")
-    //        .style("top", pieWidth / 2 + "px")
-    //        .style("left", pieHeight / 2 + "px");
-    //})
-    //.on("mouseout", function() {
-    //    d3.select("#tooltip")
-    //        .style("visibility", "hidden");
-    //})
-    .transition() 
-          .duration(1000) 
-          .attrTween("d", function(d) { 
-              var i = d3.interpolate(d.startAngle, d.endAngle);
-              return function(t) {
-                  d.endAngle = i(t);
-                  return arc(d);
-              };
+            .data(d3.pie()(curr_data))
+            .enter().append("path")
+            .attr("d", arc)
+            .attr("fill", (d, i) => colors[i])
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
+            .on("mouseover", function(d, i) {
+                const percentage = (i.value / totalVotes) * 100;
+                tooltip.html(`<strong>${percentage.toFixed(2)}%</strong> (${i.value} votes)`);
+                tooltip.style("top", `${d3.event.pageY}px`)
+                    .style("left", `${d3.event.pageX}px`)
+                    .style("visibility", "visible");
+            })
+            .on("mouseout", function() {
+                tooltip.style("visibility", "hidden");
+            })
+            .transition()
+            .duration(1000)
+            .attrTween("d", function(d) {
+                var i = d3.interpolate(d.startAngle, d.endAngle);
+                return function(t) {
+                    d.endAngle = i(t);
+                    return arc(d);
+                };
             });
-      
+        const titleContainer = d3.select(svg.node().parentNode)
+            .append("div")
+            .attr("class", "title-container")
+            .style("position", "absolute")
+            .style("top", `${height / 2 - 27}px`)
+            .style("left", `${width + 87}px`)
+            .style("width", `${pieWidth}px`)
+            .style("text-align", "center");
 
-        
-          const titleContainer = d3.select(svg.node().parentNode)
-          .append("div")
-          .attr("class", "title-container")
-          .style("position", "absolute")
-          .style("top", `${height / 2 - 77}px`) 
-          .style("left", `${width + 87}px`)
-          .style("width", `${pieWidth}px`)
-          .style("text-align", "center");
+        titleContainer.append("text")
+            .attr("text-anchor", "middle")
+            .style("font-size", "24px")
+            .style("font-weight", "bold")
+            .text(stateName);
 
-      titleContainer.append("text")
-          .attr("text-anchor", "middle")
-          .style("font-size", "24px")
-          .style("font-weight", "bold")
-          .text(stateName);
+        const keyContainer = d3.select(svg.node().parentNode)
+            .append("div")
+            .attr("class", "key-container")
+            .style("position", "absolute")
+            .style("top", `${height / 2 + 210}px`)
+            .style("left", `${width + 300}px`)
+            .style("width", `${pieWidth}px`)
+            .style("text-align", "left")
+            .style("font-size", "12px")
+            .style("padding", "5px");
 
-      const keyContainer = d3.select(svg.node().parentNode)
-          .append("div")
-          .attr("class", "key-container")
-          .style("position", "absolute")
-          .style("top", `${height / 2 + 160}px`)
-          .style("left", `${width + 300}px`)
-          .style("width", `${pieWidth}px`)
-          .style("text-align", "left")
-          .style("font-size", "12px")
-          .style("padding", "5px");
+        keyContainer.append("div")
+            .style("font-weight", "bold")
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .html("<u>Key</u>");
 
-      keyContainer.append("div")
-          .style("font-weight", "bold")
-          .attr("text-anchor", "middle")
-          .style("font-size", "20px")
-          .html("<u>Key</u>");
+        let colorLabels = statedata2.find(row => row['state'] === stateName && row['year'] === year_use)['candidates'];
 
-      const colorLabels = statedata2.find(row => row['state'] === stateName && row['year'] === selectedYear)['candidates'];
+        const labelsContainer = keyContainer.append("div");
+        colorLabels.forEach((label, i) => {
+            const labelContainer = labelsContainer.append("div")
+                .style("margin", "5px 0")
 
-      const labelsContainer = keyContainer.append("div");
-      colorLabels.forEach((label, i) => {
-          const labelContainer = labelsContainer.append("div")
-              .style("margin", "5px 0")
+            labelContainer.append("div")
+                .style("display", "inline-block")
+                .style("width", "10px")
+                .style("height", "10px")
+                .style("background-color", colors[i])
+                .style("margin-right", "5px");
 
-          labelContainer.append("div")
-              .style("display", "inline-block")
-              .style("width", "10px")
-              .style("height", "10px")
-              .style("background-color", colors[i])
-              .style("margin-right", "5px");
-
-          labelContainer.append("span")
-              .text(label)
-              .style("color", colors[i]);
+            labelContainer.append("span")
+                .text(label)
+                .style("color", colors[i]);
         });
 
-      d3.select(svg.node().parentNode)
-          .append("div")
-          .attr("id", "tooltip")
-          .style("position", "absolute")
-          .style("z-index", "10")
-          .style("visibility", "hidden")
-          .style("background-color", "rgba(255, 255, 255, 0.8)")
-          .style("padding", "5px")
+        d3.select(svg.node().parentNode)
+            .append("div")
+            .attr("id", "tooltip")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden")
+            .style("background-color", "rgba(255, 255, 255, 0.8)")
+            .style("padding", "5px");
     }, 250);
 }
 
-  return svg.node();
+
+return svg.node();
 }
+
 
 function _us(FileAttachment) {
   return (
       FileAttachment("states-albers-10m.json").json()
   );
 }
+
 
 export default function define(runtime, observer) {
   const main = runtime.module();
