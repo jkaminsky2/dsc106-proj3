@@ -28,6 +28,12 @@ To log the value of the cell named “foo”:
 
 ~~~js
 const runtime = new Runtime();
+
+
+
+
+Source code: https://observablehq.com/@d3/zoom-to-bounding-box?intent=fork
+Dataset: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ
 const main = runtime.module(define);
 main.value("foo").then(value => console.log(value));
 ~~~
