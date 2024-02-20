@@ -4,11 +4,14 @@ function _1(md){
   <div style="text-align: center; font-size: 30px; font-weight: bold;">
       U.S. Presidential Election Data: 2000 - 2020
     </div>
+    <div style="text-align: center; margin-top: 10px;">
+  Link to write-up: [here](https://github.com/jkaminsky2/dsc106-proj3/blob/main/writeup.md)
+  </div>
   <div style="text-align: center; font-size: 16px;">
     <br> The interactive visualization below displays U.S. presidential election data from the 2000 election to the 2020 election. Select which year you want to see with the button below. 
   </div>
   <div style="text-align: center; font-size: 16px;">
-  Additionally, you can click on any state to see a breakdown of presidential votes for that state; click it a second time to zoom out. Highlight over slices of the pie chart to see additional data. <br> <br>
+  Additionally, you can click on any state to see a breakdown of presidential votes for that state; click it a second time to zoom out. Highlight over slices of the pie chart to see additional data. <br> <br> <br>
   </div>
     <div style="text-align: center; margin-top: 10px;">
     <span style="margin-right: 10px;">Select an Election Year:</span>
@@ -29,7 +32,7 @@ function _2(md){
     "\n\n"
     )}
 
-//Double click error
+//Double click error -> when zoom out w stacked bar chart and pie chart stuff remains
 //documentaiton
 
 async function fetchText(url) {
@@ -216,7 +219,7 @@ async function _chart(d3, topojson, us) {
       .append("div")
       .attr("class", "title-container")
       .style("position", "absolute")
-      .style("top", "170px")
+      .style("top", "210px")
       .style("left", "50%")
       .style("text-align", "center")
       .style("transform", "translateX(-50%)")
