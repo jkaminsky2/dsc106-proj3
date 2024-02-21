@@ -11,7 +11,7 @@ function _1(md){
     <br> This interactive visualization displays U.S. presidential election data from the 2000 election to the 2020 election, sourced from [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ). Select which year you want to see with the button below. 
   </div>
   <div style="text-align: center; font-size: 16px;">
-  Additionally, you can click on any state to see a breakdown of presidential votes for that state; click it a second time to zoom out. When zoomed in on a state, highlight over slices of the pie chart to see additional data. <br> <br> <br>
+  You can also click on any state to see a breakdown of presidential votes for that state; click it a second time to zoom out. When zoomed in on a state, highlight over slices of the pie chart to see additional data. <br> <br> <br>
   </div>
     <div style="text-align: center; margin-top: 10px;">
     <span style="margin-right: 10px;">Select an Election Year:</span>
