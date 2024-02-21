@@ -41,42 +41,32 @@ async function getdata(d3) {
   let ovrdata2 = []; 
   const csvURL = 'static/state_pres_data.csv';
   const csvURL2 = 'static/overall_pres_data.csv';
-
-  try {
-    const stateResponse = await fetchText(csvURL);
-    const stateData = await processData(stateResponse);
-    const ovrResponse = await fetchText(csvURL2);
-    const ovrData = await processData(ovrResponse);
-    ovrdata2 = ovrData.map(state => ({
-      state: state.state,
-      year: state.year,
-      result: state.result
-    }));
-  } catch (error) {
-    console.error('Failed to fetch or process CSV data:', error);
-  }
+  const stateResponse = await fetchText(csvURL);
+  const stateData = await processData(stateResponse);
+  const ovrResponse = await fetchText(csvURL2);
+  const ovrData = await processData(ovrResponse);
+  ovrdata2 = ovrData.map(state => ({
+    state: state.state,
+    year: state.year,
+    result: state.result
+  }));
   return ovrdata2;
 }
 
 async function getdata2(d3) {
   let statedata2 = [];
   const csvURL = 'static/states_pres_data_5.csv';
-
-  try {
-    const stateResponse = await fetchText(csvURL);
-    const stateData = await processData2(stateResponse);
-    
-    statedata2 = stateData.map(state => ({
-      state: state.state,
-      year: state.year,
-      candidates: state.candidates,
-      totvotes: state.votes,
-      pervotes: state.percentages,
-      electoral: state.pervotes
-    }));
-  } catch (error) {
-    console.error('Failed to fetch or process CSV data:', error);
-  }
+  const stateResponse = await fetchText(csvURL);
+  const stateData = await processData2(stateResponse);
+  
+  statedata2 = stateData.map(state => ({
+    state: state.state,
+    year: state.year,
+    candidates: state.candidates,
+    totvotes: state.votes,
+    pervotes: state.percentages,
+    electoral: state.pervotes
+  }));
   return statedata2;
 }
 
@@ -108,19 +98,14 @@ function processData2(csvData) {
 async function getdata3(d3) {
   let elecdata = [];
   const csvURL = 'static/elecvotes2.csv';
-
-  try {
-    const electoralVotes = await fetchText(csvURL);
-    const electoralVotesData = await processData3(electoralVotes);
-    
-    elecdata = electoralVotesData.map(state => ({
-      year: state.state,
-      candidate: state.year,
-      elecVotes: state.result
-    }));
-  } catch (error) {
-    console.error('Failed to fetch or process CSV data:', error);
-  }
+  const electoralVotes = await fetchText(csvURL);
+  const electoralVotesData = await processData3(electoralVotes);
+  
+  elecdata = electoralVotesData.map(state => ({
+    year: state.state,
+    candidate: state.year,
+    elecVotes: state.result
+  }));
   return elecdata;
 }
 
