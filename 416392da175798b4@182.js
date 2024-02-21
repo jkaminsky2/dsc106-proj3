@@ -529,7 +529,7 @@ async function _chart(d3, topojson, us) {
             .append("div")
             .attr("class", "key-container")
             .style("position", "absolute")
-            .style("top", `${height / 2 + 335}px`)
+            .style("top", `${height / 2 + 350}px`)
             .style("left", `${width + 290}px`)
             .style("width", `${pieWidth}px`)
             .style("text-align", "left")
