@@ -31,10 +31,6 @@ function _2(md){
   return(
     "\n\n"
     )}
-    
-//Double click error -> when zoom out w stacked bar chart and pie chart stuff remains
-//make sure functionalities outside out double click zoom out work + year
-//documentaiton
 
 async function fetchText(url) {
   const response = await fetch(url);
@@ -184,12 +180,9 @@ function addControls(d3, svg, zoom) {
 async function _chart(d3, topojson, us) {
   let selectedYear = "2000";
   selectedYear = document.getElementById('year-select').value;
-  console.log(selectedYear);
   let statedata2 = await getdata2(d3);
   let electoralVotesDataset = await getdata3(d3);
   let ovrdata2 = await getdata(d3);
-
-  console.log(ovrdata2);
 
   const width = 975;
   const height = 610;
@@ -204,9 +197,7 @@ async function _chart(d3, topojson, us) {
       .attr("height", "60%")
       .attr("style", "max-width: 100%; height: auto; display: block; margin: auto;margin-right:300px;margin-top:50px")
       .on("click", reset);
-    
- 
-  
+
   const path = d3.geoPath();
 
   function renderTitleAndBarChart(selectedYear, withTransition = false) {
@@ -241,7 +232,6 @@ async function _chart(d3, topojson, us) {
       .style("display", "flex")
       .style("justify-content", "center")
       .style("margin-top", "15px");
-
 
   const barChart = barChartContainer.append("svg")
     .attr("width", barWidth1 + barWidth2) 
@@ -356,6 +346,7 @@ async function _chart(d3, topojson, us) {
 }
 
   d3.select("#year-select").on("change", updateChart);
+  
   async function updateChart() {
     const year_user = document.getElementById('year-select').value;
     reset();
@@ -474,42 +465,42 @@ async function _chart(d3, topojson, us) {
             .style("padding", "5px");
 
             const slices = pieGroup.selectAll("path")
-    .data(d3.pie()(curr_data))
-    .enter().append("path")
-    .attr("d", arc)
-    .attr("fill", (d, i) => colors[i])
-    .attr("stroke", "black")
-    .attr("stroke-width", 1)
-    .on("mousemove", (event, d, i) => {
-        const mouseX = event.pageX;
-        const mouseY = event.pageY;
-        const percentage = 100 * d.value / totalVotes;
-        const tooltipText = `${percentage.toFixed(2)}%` + `</br>` + `${((d.value / 1000000).toFixed(2))} M votes`;
-        tooltip.html(tooltipText);
-        tooltip.style("top", `${mouseY - 45}px`)
-            .style("left", `${mouseX}px`)
-            .style("visibility", "visible")
-            .style("z-index", "9999");
-        const textBox = d3.select(".tooltip-text-box");
-        textBox.html(tooltipText);
-        const textboxWidth = 100;
-        textBox.style("top", `${mouseY - 45}px`)
-              .style("left", `${mouseX - textboxWidth / 2}px`)
-              .style("z-index", "10000");
-    })
-    .on("mouseout", function() {
-        tooltip.style("visibility", "hidden");
-        d3.select(".tooltip-text-box").remove();
-    })
-    .transition()
-    .duration(1000)
-    .attrTween("d", function(d) {
-        var i = d3.interpolate(d.startAngle, d.endAngle);
-        return function(t) {
-            d.endAngle = i(t);
-            return arc(d);
-        };
-    });    
+        .data(d3.pie()(curr_data))
+        .enter().append("path")
+        .attr("d", arc)
+        .attr("fill", (d, i) => colors[i])
+        .attr("stroke", "black")
+        .attr("stroke-width", 1)
+        .on("mousemove", (event, d, i) => {
+            const mouseX = event.pageX;
+            const mouseY = event.pageY;
+            const percentage = 100 * d.value / totalVotes;
+            const tooltipText = `${percentage.toFixed(2)}%` + `</br>` + `${((d.value / 1000000).toFixed(2))} M votes`;
+            tooltip.html(tooltipText);
+            tooltip.style("top", `${mouseY - 45}px`)
+                .style("left", `${mouseX}px`)
+                .style("visibility", "visible")
+                .style("z-index", "9999");
+            const textBox = d3.select(".tooltip-text-box");
+            textBox.html(tooltipText);
+            const textboxWidth = 100;
+            textBox.style("top", `${mouseY - 45}px`)
+                  .style("left", `${mouseX - textboxWidth / 2}px`)
+                  .style("z-index", "10000");
+        })
+        .on("mouseout", function() {
+            tooltip.style("visibility", "hidden");
+            d3.select(".tooltip-text-box").remove();
+        })
+        .transition()
+        .duration(1000)
+        .attrTween("d", function(d) {
+            var i = d3.interpolate(d.startAngle, d.endAngle);
+            return function(t) {
+                d.endAngle = i(t);
+                return arc(d);
+            };
+        });    
         const titleContainer = d3.select(svg.node().parentNode)
             .append("div")
             .attr("class", "title-container")
