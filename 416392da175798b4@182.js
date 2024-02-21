@@ -118,50 +118,6 @@ function processData3(csvData) {
   return data;
 }
 
-function addControls(d3, svg, zoom) {
-  const years = Array.from({ length: 21 }, (_, i) => 2000 + i);
-
-  const selectYear = d3.select(svg.node().parentNode)
-      .append("select")
-      .attr("id", "year-select")
-      .style("position", "absolute")
-      .style("top", "10px") 
-      .style("left", "10px") 
-      .selectAll("option")
-      .data(years)
-      .enter()
-      .append("option")
-      .text(d => d)
-      .attr("value", d => d);
-  
-  const topLeftButton = d3.select(svg.node().parentNode) 
-      .append("button")
-      .text("Go to Top Left")
-      .style("position", "absolute")
-      .style("top", "30px")
-      .style("left", "10px") 
-      .on("click", () => {
-          svg.transition().duration(750).call(
-              zoom.transform,
-              d3.zoomIdentity.translate(0, 0).scale(1)
-          );
-      });
-
-  const stateInfo = d3.select(svg.node().parentNode)
-      .append("div")
-      .attr("class", "state-info")
-      .style("position", "absolute")
-      .style("top", "10px")
-      .style("right", "10px")
-      .style("width", "200px")
-      .style("height", "auto")
-      .style("background-color", "#f9f9f9")
-      .style("padding", "10px")
-      .style("border", "1px solid #ccc")
-      .style("border-radius", "5px")
-      .style("display", "none");
-}
-
 async function _chart(d3, topojson, us) {
   let selectedYear = "2000";
   selectedYear = document.getElementById('year-select').value;
