@@ -2,13 +2,13 @@ function _1(md){
   return(
   md`
   <div style="text-align: center; font-size: 30px; font-weight: bold;">
-      U.S. Presidential Election Data: 2000 - 2020
+      What is the Overall Result and State Breakdown of U.S. Presidential Elections from 2000 to 2020?
     </div>
     <div style="text-align: center; margin-top: 10px;">
   Link to write-up: [here](https://github.com/jkaminsky2/dsc106-proj3/blob/main/writeup.md)
   </div>
   <div style="text-align: center; font-size: 16px;">
-    <br> The interactive visualization below displays U.S. presidential election data from the 2000 election to the 2020 election. Select which year you want to see with the button below. 
+    <br> The interactive visualization below displays U.S. presidential election data from the 2000 election to the 2020 election, sourced from [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ). Select which year you want to see with the button below. 
   </div>
   <div style="text-align: center; font-size: 16px;">
   Additionally, you can click on any state to see a breakdown of presidential votes for that state; click it a second time to zoom out. Highlight over slices of the pie chart to see additional data. <br> <br> <br>
@@ -31,8 +31,9 @@ function _2(md){
   return(
     "\n\n"
     )}
-
+    
 //Double click error -> when zoom out w stacked bar chart and pie chart stuff remains
+//make sure functionalities outside out double click zoom out work + year
 //documentaiton
 
 async function fetchText(url) {
@@ -42,7 +43,6 @@ async function fetchText(url) {
 
 async function getdata(d3) {
   let ovrdata2 = []; 
-
   const csvURL = 'static/state_pres_data.csv';
   const csvURL2 = 'static/overall_pres_data.csv';
 
@@ -64,7 +64,6 @@ async function getdata(d3) {
 
 async function getdata2(d3) {
   let statedata2 = [];
-
   const csvURL = 'static/states_pres_data_5.csv';
 
   try {
@@ -110,10 +109,8 @@ function processData2(csvData) {
   return data;
 }
 
-
 async function getdata3(d3) {
   let elecdata = [];
-
   const csvURL = 'static/elecvotes2.csv';
 
   try {
@@ -139,7 +136,6 @@ function processData3(csvData) {
   });
   return data;
 }
-
 
 function addControls(d3, svg, zoom) {
   const years = Array.from({ length: 21 }, (_, i) => 2000 + i);
@@ -228,82 +224,82 @@ async function _chart(d3, topojson, us) {
       .style("z-index", "100")
       .text(title_text);
 
-      const curr_year_calc = document.getElementById('year-select').value;
-const user_row1 = parseInt(2 * (parseInt(curr_year_calc) % 2000) / 4) + 1;
-const value1 = electoralVotesDataset[user_row1 + 1]['elecVotes'];
-const value2 = electoralVotesDataset[user_row1]['elecVotes'];
-const total = value1 + value2;
-const proportion1 = value1 / total;
-const proportion2 = value2 / total;
-const name1 = electoralVotesDataset[user_row1 + 1]['candidate'];
-const name2 = electoralVotesDataset[user_row1]['candidate'];
+  const curr_year_calc = document.getElementById('year-select').value;
+  const user_row1 = parseInt(2 * (parseInt(curr_year_calc) % 2000) / 4) + 1;
+  const value1 = electoralVotesDataset[user_row1 + 1]['elecVotes'];
+  const value2 = electoralVotesDataset[user_row1]['elecVotes'];
+  const total = value1 + value2;
+  const proportion1 = value1 / total;
+  const proportion2 = value2 / total;
+  const name1 = electoralVotesDataset[user_row1 + 1]['candidate'];
+  const name2 = electoralVotesDataset[user_row1]['candidate'];
 
-const barWidth1 = proportion1 * 400; 
-const barWidth2 = proportion2 * 400;
+  const barWidth1 = proportion1 * 400; 
+  const barWidth2 = proportion2 * 400;
 
-const barChartContainer = titleContainer.append("div")
-    .style("display", "flex")
-    .style("justify-content", "center")
-    .style("margin-top", "15px");
+  const barChartContainer = titleContainer.append("div")
+      .style("display", "flex")
+      .style("justify-content", "center")
+      .style("margin-top", "15px");
 
 
-const barChart = barChartContainer.append("svg")
-  .attr("width", barWidth1 + barWidth2) 
-  .attr("height", 50);
+  const barChart = barChartContainer.append("svg")
+    .attr("width", barWidth1 + barWidth2) 
+    .attr("height", 50);
 
-barChart.append("rect")
-  .attr("x", 0)
-  .attr("y", 15)
-  .attr("width", barWidth1)
-  .attr("height", 25)
-  .style("fill", "red");
+  barChart.append("rect")
+    .attr("x", 0)
+    .attr("y", 15)
+    .attr("width", barWidth1)
+    .attr("height", 25)
+    .style("fill", "red");
 
-barChart.append("rect")
-  .attr("x", barWidth1)
-  .attr("y", 15)
-  .attr("width", barWidth2)
-  .attr("height", 25)
-  .style("fill", "blue");
+  barChart.append("rect")
+    .attr("x", barWidth1)
+    .attr("y", 15)
+    .attr("width", barWidth2)
+    .attr("height", 25)
+    .style("fill", "blue");
 
-barChart.append("text")
-  .attr("x", 0)
-  .attr("y", 10)
-  .attr("text-anchor", "start")
-  .text(name1)
-  .style("fill", "black")
-  .style("font-size", "12px");
+  barChart.append("text")
+    .attr("x", 0)
+    .attr("y", 10)
+    .attr("text-anchor", "start")
+    .text(name1)
+    .style("fill", "black")
+    .style("font-size", "12px");
 
-barChart.append("text")
-  .attr("x", barWidth1 + barWidth2)
-  .attr("y", 10)
-  .attr("text-anchor", "end")
-  .text(name2)
-  .style("fill", "black")
-  .style("font-size", "12px");
+  barChart.append("text")
+    .attr("x", barWidth1 + barWidth2)
+    .attr("y", 10)
+    .attr("text-anchor", "end")
+    .text(name2)
+    .style("fill", "black")
+    .style("font-size", "12px");
 
-barChart.append("line")
-  .attr("x1", (barWidth1+ barWidth2) / 2)
-  .attr("y1", 15)
-  .attr("x2", (barWidth1+ barWidth2) / 2)
-  .attr("y2", 40)
-  .attr("stroke-width", "2px")
-  .style("stroke", "black");
-  
-barChart.append("text")
-  .attr("x", (barWidth1+ barWidth2) / 2)
-  .attr("y", 10)
-  .attr("text-anchor", "middle")
-  .text("Goal (270)")
-  .style("fill", "black")
-  .style("font-size", "12px");
-  if (withTransition) {
-    titleContainer
-      .style("opacity", 0)
-      .transition()
-      .duration(2000)
-      .style("opacity", 1);
-  }
-  };
+  barChart.append("line")
+    .attr("x1", (barWidth1+ barWidth2) / 2)
+    .attr("y1", 15)
+    .attr("x2", (barWidth1+ barWidth2) / 2)
+    .attr("y2", 40)
+    .attr("stroke-width", "2px")
+    .style("stroke", "black");
+    
+  barChart.append("text")
+    .attr("x", (barWidth1+ barWidth2) / 2)
+    .attr("y", 10)
+    .attr("text-anchor", "middle")
+    .text("Goal (270)")
+    .style("fill", "black")
+    .style("font-size", "12px");
+    if (withTransition) {
+      titleContainer
+        .style("opacity", 0)
+        .transition()
+        .duration(2000)
+        .style("opacity", 1);
+    }
+    };
   const g = svg.append("g");
     
   renderTitleAndBarChart(document.getElementById('year-select').value);
@@ -328,8 +324,6 @@ barChart.append("text")
           }
       })
       .on("click", clicked);
-
-
   states.append("title")
       .text(d => d.properties.name);
 
@@ -344,7 +338,6 @@ barChart.append("text")
 
   states.on("click", clicked).on("dblclick", clicked);
 
-
   function reset() {
     svg.transition().duration(500).style("margin-right", "300px");
     svg.transition().delay(500).duration(750).call(
@@ -358,17 +351,16 @@ barChart.append("text")
           .duration(400)
           .style("opacity", 0)
           .remove();
-          zoomedState = null;
-  }
+      zoomedState = null;
+    }
 }
 
   d3.select("#year-select").on("change", updateChart);
   async function updateChart() {
     const year_user = document.getElementById('year-select').value;
+    reset();
     d3.select(".title-container").transition().duration(400).style("opacity", 0).remove();
     d3.select(".bar-chart-container").transition().duration(400).style("opacity", 0).remove();
-    renderTitleAndBarChart(year_user,true);
-    reset();
     const statesPaths = d3.selectAll("path");
 
     statesPaths.each(function(d) {
@@ -387,14 +379,13 @@ barChart.append("text")
             }
         }, 10);
     });
-      renderTitleAndBarChart(year_user);
+      renderTitleAndBarChart(year_user,true);
   }
 
   let zoomedState = null;
   function clicked(event, d) {
     const stateName = d.properties.name;
     const statePath = d3.select(this);
-
     if (zoomedState === stateName) {
         reset();
         renderTitleAndBarChart(document.getElementById('year-select').value, true);
@@ -431,14 +422,11 @@ barChart.append("text")
     }
 }
 
-
-
   function zoomed(event) {
       const { transform } = event;
       g.attr("transform", transform);
       g.attr("stroke-width", 1 / transform.k);
   }
-
 
   function displayPieChart(d3, stateName, selectedYear) {
     const year_use = document.getElementById('year-select').value;
@@ -451,7 +439,6 @@ barChart.append("text")
     const pieWidth = 200;
     const pieHeight = 200;
     const radius = Math.min(pieWidth, pieHeight) / 2;
-
     d3.select(".title-container").remove();
 
     const arc = d3.arc()
@@ -519,8 +506,7 @@ barChart.append("text")
             d.endAngle = i(t);
             return arc(d);
         };
-    });
-     
+    });    
         const titleContainer = d3.select(svg.node().parentNode)
             .append("div")
             .attr("class", "title-container")
@@ -583,17 +569,14 @@ barChart.append("text")
     }, 250);
 }
 
-
 return svg.node();
 }
-
 
 function _us(FileAttachment) {
   return (
       FileAttachment("states-albers-10m.json").json()
   );
 }
-
 
 export default function define(runtime, observer) {
   const main = runtime.module();
