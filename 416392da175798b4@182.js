@@ -308,7 +308,7 @@ async function _chart(d3, topojson, us) {
       .domain([-1, 1])
       .range(["red", "blue"]);
 
-  let states = g.append("g")
+  const states = g.append("g")
       .attr("cursor", "pointer")
       .selectAll("path")
       .data(topojson.feature(us, us.objects.states).features)
@@ -362,10 +362,11 @@ async function _chart(d3, topojson, us) {
     d3.select(".title-container").transition().duration(400).style("opacity", 0).remove();
     d3.select(".bar-chart-container").transition().duration(400).style("opacity", 0).remove();
     const statesPaths = d3.selectAll("path");
-
     statesPaths.each(function(d) {
         const statePath = d3.select(this);
         setTimeout(() => {
+          const x = d === undefined;
+          if (x == false) {
             const resultRow = ovrdata2.find(row => row['state'] == d.properties['name'] && row['year'] === year_user);
             if (resultRow) {
                 const result = resultRow['result'];
@@ -377,6 +378,8 @@ async function _chart(d3, topojson, us) {
                     .duration(1500)
                     .attr("fill", colorScale(0));
             }
+          } else {
+          }
         }, 10);
     });
       renderTitleAndBarChart(year_user,true);
@@ -451,7 +454,7 @@ async function _chart(d3, topojson, us) {
         .attr("width", pieWidth)
         .attr("height", pieHeight)
         .style("position", "absolute")
-        .style("top", `${height / 2 + 100}px`)
+        .style("top", `${height / 2 + 175}px`)
         .style("right", "10px")
         .style("left", "1062px")
         .style("display", "none");
@@ -511,7 +514,7 @@ async function _chart(d3, topojson, us) {
             .append("div")
             .attr("class", "title-container")
             .style("position", "absolute")
-            .style("top", `${height / 2 + 45}px`)
+            .style("top", `${height / 2 + 120}px`)
             .style("left", `${width + 87}px`)
             .style("width", `${pieWidth}px`)
             .style("text-align", "center");
@@ -526,7 +529,7 @@ async function _chart(d3, topojson, us) {
             .append("div")
             .attr("class", "key-container")
             .style("position", "absolute")
-            .style("top", `${height / 2 + 280}px`)
+            .style("top", `${height / 2 + 335}px`)
             .style("left", `${width + 290}px`)
             .style("width", `${pieWidth}px`)
             .style("text-align", "left")
